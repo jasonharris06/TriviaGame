@@ -2,7 +2,7 @@ $(document).ready(function(){
     var score = 0;
     var time = 60;
     var triviaQuestions = {
-        question: ["What is Rick's catch phrase?",
+        question: ["What is Ricks catch phrase?",
             "How did Beebo help Rick and Morty on Venzenulon 7?",
             "How did Morty figure out which characters were parasites in season 2 episode 4?",
             "Which movie does Rick and Morty depict in season 3 episode 2?",
@@ -24,18 +24,25 @@ $(document).ready(function(){
             ["Rat","Balloon","Watermelon","Pickle"]],
         correctAnswer: ["Wubba lubba dub dub!","Helped them find water","Realized they could only produce pleasent memories","Mad Max","Tittybeans","Farting","To cancel out his intellegence so he won't be tracked","Horse Surgeon","Headism","Pickle"]
     }
+    alert(triviaQuestions.question);
+    for(var i = 0; i < triviaQuestions.question.length; i++){
+        console.log([i]);
+        $("#question-container").append("<h3>"+ triviaQuestions.question[i] + "</h3>")
+
+        for(var i = 0; i < triviaQuestions.possibleAnswers.length; i++){
+            $("#question-container").append("<input type=<q>radio</q> name=<q>possibleAnswers</q> value=<q>" + triviaQuestions.possibleAnswers[i] + "</q> >" + triviaQuestions.possibleAnswers[i])
+        }
+    }
     
-    
-function countDownTimer(){
-    
-     if(time>0){
-        $("h2").html("TIME REMAINING: " + time);
-        console.log(time);
-        time--;
-        timer = setTimeout(countDownTimer,1000);
-     }
-    
-    
-}
+    function countDownTimer() {
+
+        if (time > 0) {
+            $("h2").html("TIME REMAINING: " + time);
+            time--;
+            timer = setTimeout(countDownTimer, 1000);
+        }
+    }
     countDownTimer();
+
+
 });
