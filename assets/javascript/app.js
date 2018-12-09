@@ -1,160 +1,114 @@
 
 $(document).ready(function () {
 
-    var correctAnswers = 0;
-    var time = 60;
-    var unansweredQuestions = 0;
-    var incorrectAnswers = 0;
-   
-    var triviaQuestions = {
-
-        question: ["What is Ricks catch phrase?",
-            "How did Beebo help Rick and Morty on Venzenulon 7?",
-            "How did Morty figure out which characters were parasites in season 2 episode 4?",
-            "Which movie does Rick and Morty depict in season 3 episode 2?",
-            "What is Million Ants nickname for Supernova?",
-            "What is the sound the Gazorpazorps do not speak because it doesnt exist?",
-            "Why does Rick always keep Morty close by?",
-            "What is Beths profession?",
-            "What religion is created when the Cromulons show up to earth?",
-            "What does Rick turn himself into to avoid going to counseling?"],
-        possibleAnswers: [["And that's the way the news goes!", "Schlip schlap slup!", "Grass, tastes bad!", "Wubba lubba dub dub!"],
-        ["Helped them find water", "Saved them from the screaming sun", "Fought off Hep C", "Saved them from the impending cold"],
-        ["Used the portal gun", "Realized they could only produce pleasent memories", "Go with Sleepy Gary up the coast on a boat", "Shoot Rick"],
-        ["The Purge", "Saw", "Mad Max", "Titanic"],
-        ["Gloria", "Tittybeans", "Snuzzles", "Tootsie"],
-        ["Crying", "Screaming", "Yelling", "Farting"],
-        ["To cancel out his intellegence so he won't be tracked", "Human shield", "For good Company", "To get him out of school for a real education"],
-        ["Stay at home Mom", "CEO of a big company", "Doctor", "Horse Surgeon"],
-        ["Potato Farmer", "Judaism", "Headism", "Cromulonism"],
-        ["Rat", "Balloon", "Watermelon", "Pickle"]],
-        correctAnswer: ["Wubba lubba dub dub!", "Helped them find water", "Realized they could only produce pleasent memories", "Mad Max", "Tittybeans", "Farting", "To cancel out his intellegence so he won't be tracked", "Horse Surgeon", "Headism", "Pickle"]
-
-    }
-    
-
-       
-function setupGame(){
+ var topics = ["Bird","Elephant","Chameleon"];
 
 
-    var qCount = 0;
-        triviaQuestions.question.forEach(function(questionItem){
-   
-            var questionDiv = $("<div>");
-            
-            var questionTag = $(questionDiv).append("<h3>" + questionItem + "</h3>")
-            $("#question-container").append(questionTag);
-            // console.log(questionItem);
-            
-        
-            triviaQuestions.possibleAnswers[qCount].forEach(function(possAnswerItem){
-                // console.log(possAnswerItem);
+ function displayGifs(){
 
-                var $input = $('<input />', {
-                                    type: "radio",
-                                    name: "Possible-Answers"+[qCount],
-                                    value: possAnswerItem
-                                });
-                
-                                $("<label />", {
-                                    insertAfter: "h3",
-                                    append: [$input, possAnswerItem]
-                                });
-      
-            });
-            qCount++;
-    
-        });
+ 
+   console.log("click")
+  var animal = $(this).attr("data-name");
+  console.log(animal);
+  var api_key= "7mU1zc5sZ2ekXXjWNvmUnRjTEoxRJjjZ"
+  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+    animal + "&api_key=" + api_key + "&limit=10";
 
-    }
-    
-    function countDownTimer() {
-       
-        if (time >= 0) {
-            $("h2").html("TIME REMAINING: " + time);
-            time--;
-            timer = setTimeout(countDownTimer, 1000);
-            gameEnd(time);
-            
-            
-        }
-    }
-    
-    function gameEnd(time) {
-        // var time=time;
-        console.log(time);
-        if (time === 0) {
-            console.log(time);
-            $("h2").empty();
-            var userAnswer = [];
-            $("input:radio:checked").each(function () {
-                userAnswer.push($(this).val());
-                
-            });
-            for (var i = 0; i < triviaQuestions.correctAnswer.length; i++) {
-                var correctAnswer = triviaQuestions.correctAnswer[i];
-                
-                
-                // for(var j=0; j < userAnswer.length; j++){
-                //     if(userAnswer.length < triviaQuestions.question.length){
-                //         unansweredQuestions = (triviaQuestions.question.length - userAnswer.length);
-                //         console.log('adding 1 to unansweredQuestions');
-                //         // console.log(correctAnswer === userAnswer[j]);
-                //         // console.log(userAnswer[j]);
-                //     }
-                //     else if(triviaQuestions.correctAnswer[i] === userAnswer[j]){
-                //         console.log('adding 1 to correctAnswers');
-                //         correctAnswers++;
-                //     }
-                //     else{
-                //         console.log('adding 1 to incorrectAnswers');
-                //         incorrectAnswers++;
-                //     }
-                    
-                // }
-                if(correctAnswer===userAnswer[i]){
-                    correctAnswers++;
-                }
-                else
-                incorrectAnswers++
-            }
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).then(function(response) {
+      var results = response.data;
+      console.log(response);
+      for (var i = 0; i < results.length; i++) {
+        var gifDiv = $("<div>");
 
-            $("#question-container").empty();
-            $(".game-end").append("<h3>"+"Correct Answers : " + correctAnswers + "</h3>");
-            $(".game-end").append("<h3>"+"Wrong Answers: " + incorrectAnswers + "</h3>");
-            $(".game-end").append($('<button />', {
-                class: "start-over",
-                text: "Start Over",  
-            }));
-            //$(".game-end").append("<h3>"+"Unanswered: " + unansweredQuestions + "</h3>");
-           
-            console.log(incorrectAnswers);
-            console.log(correctAnswers);
-            console.log(unansweredQuestions);
-        }
-        $(".start-over").on("click", function(){
-            $(".game-end").empty();
-            time =60;
-            countDownTimer(time);
-            setupGame();
-        });
-      
-      
-    }
-    $(".start-over").on("click", function(){
-        $("h2").empty();
-        $(".game-end").empty();
-        time =60;
-        countDownTimer(5);
-        setupGame();
+        var rating = results[i].rating;
+
+        var p = $("<p>").text("Rating: " + rating);
+
+        var animalImg = $("<img>");
+        animalImg.attr("src", results[i].images.fixed_height_still.url);
+        animalImg.attr("data-still", results[i].images.original_still.url);
+        animalImg.attr("data-animate", results[i].images.original.url);
+        animalImg.attr("data-state", "still");
+        animalImg.attr("class", "gif");
+
+        gifDiv.prepend(p);
+        gifDiv.prepend(animalImg);
+
+        $(".gifcontainer").prepend(gifDiv);
+      }
     });
-  
-        
+ }
+
+ function renderButtons() {
+
+    // Deleting the movies prior to adding new movies
+    // (this is necessary otherwise you will have repeat buttons)
+    $("#button-container").empty();
     
-    setupGame();   
-     countDownTimer();
+    // Looping through the array of movies
+    for (var i = 0; i < topics.length; i++) {
 
+      // Then dynamicaly generating buttons for each movie in the array
+      // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+      var a = $("<button>");
+      // Adding a class of movie-btn to our button
+      a.addClass("btn btn-primary Gif-btn");
+      a.attr("type", "button");
+      a.attr("id", "GIF-btn");
+      // Adding a data-attribute
+      a.attr("data-name", topics[i]);
+      // Providing the initial button text
+      a.text(topics[i]);
+      // Adding the button to the buttons-view div
+      $(".button-container").append(a);
+    } 
+}
 
+$("#add-animal").on("click", function(event) {
+  console.log(event);
+  event.preventDefault();
+  // This line grabs the input from the textbox
+  var topic = $(".useranimal").val().trim();
+  if(topic === ""){
+    
+  }
+  else{
+    topics.push(topic);
+  }
+  console.log(topic);
+  // Adding movie from the textbox to our array
+  //topics.push(topic);
+  console.log(topics);
+  // Calling renderButtons which handles the processing of our movie array
+  renderButtons();
+});
+
+function gifAnimateStill(){
+  // $(".gif").on("click", function(event) {
+    event.preventDefault();
+      // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+      var state = $(this).attr("data-state");
+      console.log(state);
+      // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+      // Then, set the image's data-state to animate
+      // Else set src to the data-still value
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    // });
+}
+
+  renderButtons();
+  $(document).on("click", "#GIF-btn", displayGifs);
+  $(document).on("click", ".gif", gifAnimateStill);
+  
 });
 
 
